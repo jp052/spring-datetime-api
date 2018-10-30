@@ -105,6 +105,40 @@ public class DateTimeRestController {
         return jsonResult;
     }
 
+    @GetMapping("/weeks")
+	public JsonResult findWeeks(
+			@RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+			@RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime,
+			@RequestParam(value = "startZone", required = false, defaultValue = "Australia/Adelaide") String startZone,
+			@RequestParam(value = "endZone", required = false, defaultValue = "Australia/Adelaide") String endZone,
+			@RequestParam(value = "format", required = false, defaultValue = DAY_FORMAT) String format) {
+
+		ZoneId startZoneId = ZoneId.of(startZone);
+		ZonedDateTime startDateTimeZoned = ZonedDateTime.of(startDateTime, startZoneId);
+
+		ZoneId endZoneId = ZoneId.of(endZone);
+		ZonedDateTime endDateTimeZoned = ZonedDateTime.of(endDateTime, endZoneId);
+
+		long weeksBetweenDates = ChronoUnit.WEEKS.between(startDateTimeZoned, endDateTimeZoned);
+
+
+		JsonResult jsonResult = new JsonResult();
+		if(format.equals("day")) {
+			jsonResult.setResult(Long.toString(weeksBetweenDates));
+			jsonResult.setFormat(DAY_FORMAT);
+		} else {
+			Duration durationBetweenDates = Duration.between(startDateTimeZoned, endDateTimeZoned);
+
+			long durationInMillis = durationBetweenDates.toMillis();
+			String formatedDuration = DurationFormatUtils.formatPeriod(0, durationInMillis, DURATION_FORMAT);
+
+			jsonResult.setResult(formatedDuration);
+			jsonResult.setFormat(DURATION_FORMAT);
+		}
+
+		return jsonResult;
+	}
+
 	@GetMapping("/hello")
 	public String hello() {
 		return "{\"hello\":\"datetime api\"}";
