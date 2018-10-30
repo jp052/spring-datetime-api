@@ -15,6 +15,13 @@ import org.junit.Test;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
+//TODO:
+/*
+ * - Add test for different timezones
+ * - Improve URL building
+ * - Refactore to remove duplicate code
+ * - Add failing tests
+ */
 public class DateTimeRestControllerTest extends RestControllerTestBase {
 	private final static String ENDPOINT_BASE = "/api/v1/datetime";
 	
@@ -25,8 +32,10 @@ public class DateTimeRestControllerTest extends RestControllerTestBase {
 	private final static String FORMAT = "format=";
 	
 	@Test
-	public void testReadDays() throws Exception {
+	public void testReadDaysWithStartAndEndDateWorks() throws Exception {
 		//assemble
+		final String DAYS_EXPECTED = "5";
+		final String FORMAT_EXPECTED = "day";
 		LocalDate startDate = LocalDate.of(2018, 9, 5);
 		LocalTime startTime = LocalTime.of(5, 30);
 		LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
@@ -42,10 +51,69 @@ public class DateTimeRestControllerTest extends RestControllerTestBase {
 		
 		//assert
 		readDaysResult
-			.andExpect(status().is2xxSuccessful());
-			//.andExpect(jsonPath("$.days").value(5))
-			//.andExpect(jsonPath("$.format").value("day"));
+			.andExpect(status().is2xxSuccessful())
+			.andExpect(jsonPath("$.result").value(DAYS_EXPECTED))
+			.andExpect(jsonPath("$.format").value(FORMAT_EXPECTED))
+			.andDo(print());
 	}
+
+	@Test
+	public void testReadDaysWithStartEndDateAndFormatParameterWorks() throws Exception {
+		//assemble
+		final String RESULT_EXPECTED = "3:119:50:15";
+		final String FORMAT_EXPECTED = "y:H:m:s";
+		LocalDate startDate = LocalDate.of(2015, 9, 5);
+		LocalTime startTime = LocalTime.of(5, 30);
+		LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+
+		LocalDate endDate = LocalDate.of(2018, 9, 10);
+		LocalTime endTime = LocalTime.of(5, 20, 15);
+		LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+
+		String queryURL = ENDPOINT_BASE + "/days?" + START_DATE + startDateTime.toString() + "&" + END_DATE + endDateTime.toString() + "&" + FORMAT + FORMAT_EXPECTED;
+
+		//action
+		ResultActions readDaysResult = mockMvc.perform(get(queryURL));
+
+		//assert
+		readDaysResult
+				.andExpect(status().is2xxSuccessful())
+				.andExpect(jsonPath("$.result").value(RESULT_EXPECTED))
+				.andExpect(jsonPath("$.format").value(FORMAT_EXPECTED))
+				.andDo(print());
+	}
+
+	@Test
+	public void testReadDaysWithTimeZonesWorks() throws Exception {
+		//assemble
+		final String DAYS_EXPECTED = "6";
+		final String FORMAT_EXPECTED = "day";
+		final String TIMEZONE_START_EXPECTED = "Australia/Adelaide";
+		final String TIMEZONE_END_EXPECTED = "Europe/Berlin";
+
+		LocalDate startDate = LocalDate.of(2018, 9, 5);
+		LocalTime startTime = LocalTime.of(5, 30);
+		LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+
+		LocalDate endDate = LocalDate.of(2018, 9, 10);
+		LocalTime endTime = LocalTime.of(23, 30);
+		LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+
+		String queryURL = ENDPOINT_BASE + "/days?" + START_DATE + startDateTime.toString() + "&" + END_DATE + endDateTime.toString();
+		String querURLZone = queryURL + "&" + START_ZONE + TIMEZONE_START_EXPECTED + "&" + END_ZONE + TIMEZONE_END_EXPECTED;
+
+		//action
+		ResultActions readDaysResult = mockMvc.perform(get(querURLZone));
+
+		//assert
+		readDaysResult
+				.andExpect(status().is2xxSuccessful())
+				.andExpect(jsonPath("$.result").value(DAYS_EXPECTED))
+				.andExpect(jsonPath("$.format").value(FORMAT_EXPECTED))
+				.andDo(print());
+	}
+	
+
 	
 	@Test
 	public void testHello() throws Exception {
