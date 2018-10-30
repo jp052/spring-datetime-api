@@ -112,7 +112,58 @@ public class DateTimeRestControllerTest extends RestControllerTestBase {
 				.andExpect(jsonPath("$.format").value(FORMAT_EXPECTED))
 				.andDo(print());
 	}
-	
+
+	@Test
+    public void testFindWeekdaysWithStartAndEndDateWorks() throws Exception {
+        //assemble
+        final String DAYS_EXPECTED = "4";
+        final String FORMAT_EXPECTED = "day";
+        LocalDate startDate = LocalDate.of(2018, 9, 5);
+        LocalTime startTime = LocalTime.of(5, 30);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+
+        LocalDate endDate = LocalDate.of(2018, 9, 10);
+        LocalTime endTime = LocalTime.of(5, 30);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+
+        String queryURL = ENDPOINT_BASE + "/weekdays?" + START_DATE + startDateTime.toString() + "&" + END_DATE + endDateTime.toString();
+
+        //action
+        ResultActions readDaysResult = mockMvc.perform(get(queryURL));
+
+        //assert
+        readDaysResult
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.result").value(DAYS_EXPECTED))
+                .andExpect(jsonPath("$.format").value(FORMAT_EXPECTED))
+                .andDo(print());
+    }
+
+    @Test
+    public void testFindWeekdaysWithStartEndDateAndFormatParameterWorks() throws Exception {
+        //assemble
+        final String RESULT_EXPECTED = "0:96:0:0";
+        final String FORMAT_EXPECTED = "y:H:m:s";
+        LocalDate startDate = LocalDate.of(2018, 9, 5);
+        LocalTime startTime = LocalTime.of(5, 30);
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+
+        LocalDate endDate = LocalDate.of(2018, 9, 10);
+        LocalTime endTime = LocalTime.of(5, 20, 50);
+        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+
+        String queryURL = ENDPOINT_BASE + "/weekdays?" + START_DATE + startDateTime.toString() + "&" + END_DATE + endDateTime.toString() + "&" + FORMAT + FORMAT_EXPECTED;
+
+        //action
+        ResultActions readDaysResult = mockMvc.perform(get(queryURL));
+
+        //assert
+        readDaysResult
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.result").value(RESULT_EXPECTED))
+                .andExpect(jsonPath("$.format").value(FORMAT_EXPECTED))
+                .andDo(print());
+    }
 
 	
 	@Test
