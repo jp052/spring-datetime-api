@@ -1,4 +1,4 @@
-package com.plankdev.datetimeapi.api.testutils;
+package com.plankdev.datetimeapi.testutils;
 
 
 
@@ -9,11 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -39,9 +37,6 @@ public abstract class RestControllerTestBase {
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
-    //To be used by subclasses to serialize or deserialize json for testing.
-    protected JsonUtils jsonUtils;
-
     protected MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8"));
@@ -56,7 +51,6 @@ public abstract class RestControllerTestBase {
                 .findAny()
                 .orElse(null);
 
-        //TODO: check if best assert
         assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
     }
 
@@ -65,9 +59,6 @@ public abstract class RestControllerTestBase {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
-
-        //create jsonUtils
-        jsonUtils = new JsonUtils(mappingJackson2HttpMessageConverter);
     }
 
 }

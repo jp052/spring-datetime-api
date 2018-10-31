@@ -1,6 +1,6 @@
 package com.plankdev.datetimeapi.api;
 
-public class JsonResult {
+public class DateTimeView {
 
     private String result;
     private String format;

@@ -1,10 +1,9 @@
 package com.plankdev.datetimeapi.api;
 
 import java.time.*;
-import java.time.temporal.ChronoUnit;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.springframework.beans.factory.annotation.Required;
+import com.plankdev.datetimeapi.config.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "api/v1/datetime")
 @RestController
 public class DateTimeRestController {
-	private final String DURATION_FORMAT = "y:H:m:s";
+
+    private DateTimeService dateTimeService;
+
+    @Autowired
+    public DateTimeRestController(DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
+    }
+
+    private final String DURATION_FORMAT = "y:H:m:s";
 	private final String DAY_FORMAT = "day";
 
 
@@ -31,117 +38,45 @@ public class DateTimeRestController {
 	 * @return
 	 */
 	@GetMapping("/days")
-	public JsonResult readDays (
+	public DateTimeView findDays (
 						@RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime, 
 						@RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime,
 						@RequestParam(value = "startZone", required = false, defaultValue = "Australia/Adelaide") String startZone,
 						@RequestParam(value = "endZone", required = false, defaultValue = "Australia/Adelaide") String endZone,
-						@RequestParam(value = "format", required = false, defaultValue = DAY_FORMAT) String format) {
+						@RequestParam(value = "format", required = false, defaultValue = Constants.DEFAULT_DURATION_FORMAT) String format) {
 
-		ZoneId startZoneId = ZoneId.of(startZone);
-		ZonedDateTime startDateTimeZoned = ZonedDateTime.of(startDateTime, startZoneId);
-
-		ZoneId endZoneId = ZoneId.of(endZone);
-		ZonedDateTime endDateTimeZoned = ZonedDateTime.of(endDateTime, endZoneId);
-		
-		Duration durationBetweenDates = Duration.between(startDateTimeZoned, endDateTimeZoned);
-		Long days = durationBetweenDates.toDays();
-
-		JsonResult jsonResult = new JsonResult();
-
-		if(format.equals("day")) {
-			jsonResult.setResult(days.toString());
-			jsonResult.setFormat(DAY_FORMAT);
-		} else {
-			long startMillis = startDateTimeZoned.toInstant().toEpochMilli();
-			long endMillis = endDateTimeZoned.toInstant().toEpochMilli();
-			String formatedDuration = DurationFormatUtils.formatPeriod(startMillis, endMillis, DURATION_FORMAT);
-
-			jsonResult.setResult(formatedDuration);
-			jsonResult.setFormat(DURATION_FORMAT);
-		}
-
-		return jsonResult;
+        DateTimeView dateTimeView = dateTimeService.findDays(startDateTime, endDateTime, startZone, endZone, format);
+        return dateTimeView;
 	}
 
-	@GetMapping("/weekdays")
-    public JsonResult findWeekdays(
+
+    @GetMapping("/weekdays")
+    public DateTimeView findWeekdays(
                                @RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
                                @RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime,
                                @RequestParam(value = "startZone", required = false, defaultValue = "Australia/Adelaide") String startZone,
                                @RequestParam(value = "endZone", required = false, defaultValue = "Australia/Adelaide") String endZone,
-                               @RequestParam(value = "format", required = false, defaultValue = DAY_FORMAT) String format) {
+                               @RequestParam(value = "format", required = false, defaultValue = Constants.DEFAULT_DURATION_FORMAT) String format) {
 
-        ZoneId startZoneId = ZoneId.of(startZone);
-        ZonedDateTime startDateTimeZoned = ZonedDateTime.of(startDateTime, startZoneId);
-
-        ZoneId endZoneId = ZoneId.of(endZone);
-        ZonedDateTime endDateTimeZoned = ZonedDateTime.of(endDateTime, endZoneId);
-
-        int weekdayCounter = 0;
-        while (startDateTimeZoned.isBefore(endDateTimeZoned.plusDays(1))) {
-            DayOfWeek currentWeekDay = startDateTimeZoned.getDayOfWeek();
-            if(! (currentWeekDay.equals(DayOfWeek.SATURDAY) || currentWeekDay.equals(DayOfWeek.SUNDAY))) {
-                weekdayCounter++;
-            }
-
-            startDateTimeZoned = startDateTimeZoned.plusDays(1);
-        }
-
-        JsonResult jsonResult = new JsonResult();
-        if(format.equals("day")) {
-            jsonResult.setResult(Integer.toString(weekdayCounter));
-            jsonResult.setFormat(DAY_FORMAT);
-        } else {
-            Duration weekdaysDuration = Duration.ofDays(weekdayCounter);
-
-            long periodInMillis = weekdaysDuration.toMillis();
-            String formatedDuration = DurationFormatUtils.formatPeriod(0, periodInMillis, DURATION_FORMAT);
-
-            jsonResult.setResult(formatedDuration);
-            jsonResult.setFormat(DURATION_FORMAT);
-        }
-
-        return jsonResult;
+        DateTimeView dateTimeView = dateTimeService.findWeekdays(startDateTime, endDateTime, startZone, endZone, format);
+        return dateTimeView;
     }
 
     @GetMapping("/weeks")
-	public JsonResult findWeeks(
+	public DateTimeView findWeeks(
 			@RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
 			@RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime,
 			@RequestParam(value = "startZone", required = false, defaultValue = "Australia/Adelaide") String startZone,
 			@RequestParam(value = "endZone", required = false, defaultValue = "Australia/Adelaide") String endZone,
-			@RequestParam(value = "format", required = false, defaultValue = DAY_FORMAT) String format) {
+			@RequestParam(value = "format", required = false, defaultValue = Constants.DEFAULT_DURATION_FORMAT) String format) {
 
-		ZoneId startZoneId = ZoneId.of(startZone);
-		ZonedDateTime startDateTimeZoned = ZonedDateTime.of(startDateTime, startZoneId);
-
-		ZoneId endZoneId = ZoneId.of(endZone);
-		ZonedDateTime endDateTimeZoned = ZonedDateTime.of(endDateTime, endZoneId);
-
-		long weeksBetweenDates = ChronoUnit.WEEKS.between(startDateTimeZoned, endDateTimeZoned);
-
-
-		JsonResult jsonResult = new JsonResult();
-		if(format.equals("day")) {
-			jsonResult.setResult(Long.toString(weeksBetweenDates));
-			jsonResult.setFormat(DAY_FORMAT);
-		} else {
-			Duration durationBetweenDates = Duration.between(startDateTimeZoned, endDateTimeZoned);
-
-			long durationInMillis = durationBetweenDates.toMillis();
-			String formatedDuration = DurationFormatUtils.formatPeriod(0, durationInMillis, DURATION_FORMAT);
-
-			jsonResult.setResult(formatedDuration);
-			jsonResult.setFormat(DURATION_FORMAT);
-		}
-
-		return jsonResult;
+        DateTimeView dateTimeView = dateTimeService.findWeeks(startDateTime, endDateTime, startZone, endZone, format);
+        return dateTimeView;
 	}
 
-	@GetMapping("/hello")
-	public String hello() {
-		return "{\"hello\":\"datetime api\"}";
+    @GetMapping("/ping")
+	public String ping() {
+		return "{\"ping\":\"datetime api up\"}";
 	}
 
 
