@@ -38,6 +38,11 @@ This guide describes how to run the application on a local linux machine.
 * run with console output: `docker run --name datetime-api-container -p 8080:8080 jp052/datetime-api`
 * Dockerhub repo: https://hub.docker.com/r/jp052/datetime-api/
 
+## Alternative without Docker
+* Java needs to be installed
+* Download Jar located in git repo: datetime-api/installer/datetime-api-v1.0.0.jar
+* Run jar: `java -jar ./datetime-api-v1.0.0.jar`
+
 # Usage
 This guide demonstrates how to use the datetime api, with all available enpoints and query parameters.
 
