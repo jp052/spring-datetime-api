@@ -43,25 +43,25 @@ This guide demonstrates how to use the datetime api, with all available enpoints
 
 ## API Endpoints
 * When run locally use: http://localhost:8080
-* Full example URL: http://localhost:8080/api/v1/datetime/days?startDateTime=2018-09-05T05:30&endDateTime=2018-09-10T23:30&startZone=Australia/Adelaide&endZone=Europe/Berlin&format=y:H:m:s
+* Full example URL: `http://localhost:8080/api/v1/datetime/days?startDateTime=2018-09-05T05:30&endDateTime=2018-09-10T23:30&startZone=Australia/Adelaide&endZone=Europe/Berlin&format=y:H:m:s`
 
-Available Endpoints
-/api/v1/datetime/days
-/api/v1/datetime/weekdays
-/api/v1/datetime/weeks
+### Available Endpoints
+* /api/v1/datetime/days
+* /api/v1/datetime/weekdays
+* /api/v1/datetime/weeks
 
-Mandatory Query Parameters:
+### Mandatory Query Parameters:
 * startDateTime and endDateTime 
   * Use ISO DateTime Format yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000-05:00"
   * Example: /api/v1/datetime/days?startDateTime=2018-09-05T05:30&endDateTime=2018-09-10T05:30
 
-Optional Query Parameters:
+### Optional Query Parameters:
 * startZone and endZone
   * any Java Timezone Id is supported, see: https://garygregory.wordpress.com/2013/06/18/what-are-the-java-timezone-ids/
   * Example: startZone=Australia/Adelaide
 * format
   * Pass any value to format output in years:hours:minuts:seconds
-  * Example: format=y:H:m:s
+  * Example: `format=y:H:m:s`
 
 # Build and Deploy
 This guide shows all steps necessary to build the app and publish image to Dockerhub on a local machine
