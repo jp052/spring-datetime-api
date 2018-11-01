@@ -32,11 +32,11 @@ This guide describes how to run the application on a local linux machine.
 * Instructions are written for Ubuntu.
 * execute `sudo -s` in command line to copy and paste the following commands, otherwise sudo is always needed.
 
-
 ## Pull and run Docker image from Dockerhub
-docker pull jp052/datetime-api
-run detached: docker run -d -p 8080:8080 datetime-api
-run with console output: docker run -p 8080:8080 jp052/datetime-api
+* pull image from dockerhub: `docker pull jp052/datetime-api`
+* run detached: `docker run --name datetime-api-container -d -p 8080:8080 datetime-api`
+* run with console output: `docker run --name datetime-api-container -p 8080:8080 jp052/datetime-api`
+* Dockerhub repo: https://hub.docker.com/r/jp052/datetime-api/
 
 # Usage
 This guide demonstrates how to use the datetime api, with all available enpoints and query parameters.
@@ -67,14 +67,14 @@ This guide demonstrates how to use the datetime api, with all available enpoints
 This guide shows all steps necessary to build the app and publish image to Dockerhub on a local machine
 
 * navigate console into project directory
-* run maven clean install in cmd or IDE to run tests and build application: ./mvnw clean install
-* delte old image: docker rmi -f <imageId> 
-* delte old container: docker rm <contaierId>
-* build new image: docker build -t datetime-api .
-* test new image: docker-compose up
-* tag image: docker tag datetime-api jp052/datetime-api
-* login dockerhub: docker login --username jp052 --password mypw (try --password-stdin for security)
-* push: docker push jp052/datetime-api
+* run maven clean install in cmd or IDE to run tests and build application: `./mvnw clean install`
+* delte old container: `docker rm <contaierId>`
+* delte old image: `docker rmi -f imageId>` 
+* build new image: `docker build -t datetime-api .`
+* test new image: `docker-compose up`
+* tag image: `docker tag datetime-api jp052/datetime-api`
+* login dockerhub: `docker login --username jp052 --password mypw` 
+* push: `docker push jp052/datetime-api`
 
 # TODO's
 All open todo's are listed as an overview here. (should be replaced
