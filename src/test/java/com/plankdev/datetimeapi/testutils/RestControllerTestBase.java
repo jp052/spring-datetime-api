@@ -1,4 +1,9 @@
-package com.plankdev.datetimeapi.api.testutils;
+/*
+ * Copyright and License:
+ * UNLICENSE. Please visit the UNLICENSE.txt or refer to <http://unlicense.org> for more information.
+ */
+
+package com.plankdev.datetimeapi.testutils;
 
 
 
@@ -9,11 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -31,6 +34,14 @@ Static import needed in sub classes:
     import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 */
 
+/**
+ * The class RestControllerTestBase is the base class for integration tests.
+ * <p>
+ * It is used to prepare and start the mocked spring boot application.
+ *
+ * @author Jan Plank
+ */
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
@@ -38,9 +49,6 @@ public abstract class RestControllerTestBase {
     protected MockMvc mockMvc;
 
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
-
-    //To be used by subclasses to serialize or deserialize json for testing.
-    protected JsonUtils jsonUtils;
 
     protected MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -56,7 +64,6 @@ public abstract class RestControllerTestBase {
                 .findAny()
                 .orElse(null);
 
-        //TODO: check if best assert
         assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
     }
 
@@ -65,9 +72,6 @@ public abstract class RestControllerTestBase {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
-
-        //create jsonUtils
-        jsonUtils = new JsonUtils(mappingJackson2HttpMessageConverter);
     }
 
 }
