@@ -84,11 +84,10 @@ This guide shows all steps necessary to build the app and publish image to Docke
 # TODO's
 All open todo's are listed as an overview here. (should be replaced
 
-- [ ] Write JavaDoc
+- [ ] Refactor code in DateTimeService methods
 - [ ] Add timezone test for weekdays and weeks endpoint
 - [ ] Add custom exception and error handling
 - [ ] Add checking with custom exceptions for wrong date and timezone formats
-- [ ] Enhance README.md formatting
 - [ ] Add code overview documentation explaining architecture and packages in github wiki
 - [ ] Add failing tests
 - [ ] Deploy application to a cloud service (Amazon or Google)
