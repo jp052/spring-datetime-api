@@ -1,3 +1,8 @@
+/*
+ * Copyright and License:
+ * UNLICENSE. Please visit the UNLICENSE.txt or refer to <http://unlicense.org> for more information.
+ */
+
 package com.plankdev.datetimeapi.api;
 
 import java.time.*;
@@ -10,8 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-//TODO: Refactor and put logic in separate classes, eg. DateTimeService
-//TODO: Improve format string to enum or just simple boolean
+/**
+ * The class DateTimeRestController defines all available routes and delegates to the service classes.
+ * <p>
+ * It is used to define routes and delegates to service classes.
+ * General Error and Exception Handling is appropriate at controller level too.
+ *
+ * @author Jan Plank
+ */
 
 @RequestMapping(value = "api/v1/datetime")
 @RestController
@@ -24,18 +35,22 @@ public class DateTimeRestController {
         this.dateTimeService = dateTimeService;
     }
 
-    private final String DURATION_FORMAT = "y:H:m:s";
-	private final String DAY_FORMAT = "day";
-
-
 	/**
-	 *  Simple example URL: /api/v1/datetime/days?startDateTime=2018-09-05T05:30&endDateTime=2018-09-10T05:30
+	 * Endpoint to find days between two given dateTime parameters.
+	 * <p>
+	 * Request parameters are provided to modify the result and support time zones.
+	 *
 	 * @param startDateTime
+	 * 			the start date is mandatory, it needs to be provided in ISO date time format. yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000-05:00"
 	 * @param endDateTime
+	 * 			the end date is mandatory, it needs to be provided in ISO date time format. yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000-05:00"
 	 * @param startZone
+	 * 			the start zone is optional, it represents a timezone. e.g. "Australia/Adelaide"
 	 * @param endZone
+	 *			the end zone is optional, it represents a timezone. e.g. "Australia/Adelaide"
 	 * @param format
-	 * @return
+	 * 			the format is optional, if present it will create a different output format
+	 * @return a new populated DateTimeView
 	 */
 	@GetMapping("/days")
 	public DateTimeView findDays (
@@ -49,7 +64,23 @@ public class DateTimeRestController {
         return dateTimeView;
 	}
 
-
+	/**
+	 * Endpoint to find weekdays between two given dateTime parameters.
+	 * <p>
+	 * Request parameters are provided to modify the result and support time zones.
+	 *
+	 * @param startDateTime
+	 * 			the start date is mandatory, it needs to be provided in ISO date time format. yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000-05:00"
+	 * @param endDateTime
+	 * 			the end date is mandatory, it needs to be provided in ISO date time format. yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000-05:00"
+	 * @param startZone
+	 * 			the start zone is optional, it represents a timezone. e.g. "Australia/Adelaide"
+	 * @param endZone
+	 *			the end zone is optional, it represents a timezone. e.g. "Australia/Adelaide"
+	 * @param format
+	 * 			the format is optional, if present it will create a different output format
+	 * @return a new populated DateTimeView
+	 */
     @GetMapping("/weekdays")
     public DateTimeView findWeekdays(
                                @RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
@@ -62,6 +93,23 @@ public class DateTimeRestController {
         return dateTimeView;
     }
 
+	/**
+	 * Endpoint to find weekdays between two given dateTime parameters.
+	 * <p>
+	 * Request parameters are provided to modify the result and support time zones.
+	 *
+	 * @param startDateTime
+	 * 			the start date is mandatory, it needs to be provided in ISO date time format. yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000-05:00"
+	 * @param endDateTime
+	 * 			the end date is mandatory, it needs to be provided in ISO date time format. yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000-05:00"
+	 * @param startZone
+	 * 			the start zone is optional, it represents a timezone. e.g. "Australia/Adelaide"
+	 * @param endZone
+	 *			the end zone is optional, it represents a timezone. e.g. "Australia/Adelaide"
+	 * @param format
+	 * 			the format is optional, if present it will create a different output format
+	 * @return a new populated DateTimeView
+	 */
     @GetMapping("/weeks")
 	public DateTimeView findWeeks(
 			@RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
@@ -74,6 +122,13 @@ public class DateTimeRestController {
         return dateTimeView;
 	}
 
+	/**
+	 * Endpoint to get a simple message to check if the api is up.
+	 * <p>
+	 * Eventually should not be removed or put into a more suitable statistics controller.
+	 * At time of creation no other controller is available.
+	 * @return message that the api is up
+	 */
     @GetMapping("/ping")
 	public String ping() {
 		return "{\"ping\":\"datetime api up\"}";

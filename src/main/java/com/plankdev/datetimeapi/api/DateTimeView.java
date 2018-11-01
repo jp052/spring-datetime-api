@@ -1,4 +1,17 @@
+/*
+ * Copyright and License:
+ * UNLICENSE. Please visit the UNLICENSE.txt or refer to <http://unlicense.org> for more information.
+ */
+
 package com.plankdev.datetimeapi.api;
+
+/**
+ * The class DateTimeView is a representation of the datetime calculation.
+ * <p>
+ * It is used to show the result to the client.
+ *
+ * @author Jan Plank
+ */
 
 public class DateTimeView {
 

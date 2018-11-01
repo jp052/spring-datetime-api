@@ -1,3 +1,8 @@
+/*
+ * Copyright and License:
+ * UNLICENSE. Please visit the UNLICENSE.txt or refer to <http://unlicense.org> for more information.
+ */
+
 package com.plankdev.datetimeapi.testutils;
 
 
@@ -28,6 +33,14 @@ Static import needed in sub classes:
     import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
     import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 */
+
+/**
+ * The class RestControllerTestBase is the base class for integration tests.
+ * <p>
+ * It is used to prepare and start the mocked spring boot application.
+ *
+ * @author Jan Plank
+ */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
