@@ -36,6 +36,7 @@ This guide describes how to run the application on a local linux machine.
 * pull image from dockerhub: `docker pull jp052/datetime-api`
 * run detached: `docker run --name datetime-api-container -d -p 8080:8080 jp052/datetime-api`
 * run with console output: `docker run --name datetime-api-container -p 8080:8080 jp052/datetime-api`
+* Start container, when it was created already: docker start datetime-api-container 
 * Dockerhub repo: https://hub.docker.com/r/jp052/datetime-api/
 
 ## Alternative without Docker
